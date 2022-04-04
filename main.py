@@ -59,12 +59,11 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     scaned = scanned_output
-    render('index.html')
     return render('index.html', title='Network Tool', scaned=scaned)
 
 
 if __name__ == '__main__':
-    searchedIp = "192.168.0.1/24"
+    searchedIp = "192.168.50.1/24"
     vendorList = readVendorList()
     scanned_output = scan(searchedIp, vendorList)
     table = tableIP(scanned_output)
