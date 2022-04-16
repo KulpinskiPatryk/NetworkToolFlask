@@ -66,5 +66,4 @@ if __name__ == '__main__':
     searchedIp = "192.168.50.1/24"
     vendorList = readVendorList()
     scanned_output = scan(searchedIp, vendorList)
-    table = tableIP(scanned_output)
     app.run()
