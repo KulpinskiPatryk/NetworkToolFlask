@@ -5,8 +5,10 @@ from flask_table import Table, Col
 import scapy.all as scapy
 import tkinter as tk
 import tkinter.ttk as ttk
+import socket
 
 
+#czytanie listy producentów
 def read_vendor_list():
     vendor_list = []
     with open("mac-vendor.txt", encoding='cp850') as my_file:
@@ -32,6 +34,7 @@ def search_vendor(mac, vendor_list):
     return vendor
 
 
+#skanowanie
 def scan(ip, vendor_list):
     arp_req_frame = scapy.ARP(pdst=ip)
 
@@ -55,6 +58,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    vendor_list = read_vendor_list()
     if request.method == 'POST':
         ip1 = request.form['ip1']
         ip2 = request.form['ip2']
@@ -63,12 +67,12 @@ def index():
         ipwide = request.form['ipwide']
         data = str(ip1 + '.' + ip2 + '.' + ip3 + '.' + ip4 + '/' + ipwide)
         searched_ip = data
-        scanned_output = scan(searched_ip, vendorList)
+        scanned_output = scan(searched_ip, vendor_list)
         print(data)
-        return render('index.html', title='Network Tool', scaned=scanned_output)
-    return render('index.html', title='Network Tool')
+        return render('index.html', title='Network Tool', scaned=scanned_output, my_ip_address=my_ip_address)
+    return render('index.html', title='Network Tool', my_ip_address=my_ip_address)
 
 
 if __name__ == '__main__':
-    vendorList = read_vendor_list()
+    my_ip_address = socket.gethostbyname(socket.gethostname())
     app.run()

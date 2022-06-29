@@ -1,49 +1,70 @@
 {% extends 'base.html' %}
-{% block body %}
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
-      <form action="/" enctype="multipart/form-data" method="POST">
-          <div class="form-group row w-25">
-              <div class="form-group w-25">
-                <input class="form-control input-sm" type="text" name="ip1">
+    {% block body %}
+        <!-- Pole wyszukiwania -->
+        <div class="bg-light">
+          <form class="p-2 w-50" action="/" enctype="multipart/form-data" method="POST">
+            <div class="form-row">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Adres:</span>
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" placeholder="192" name="ip1" />
+                </div>
+                <div class="input-group-prepend">
+                  <span class="input-group-text">.</span>
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" placeholder="168" name="ip2" />
+                </div>
+                <div class="input-group-prepend">
+                  <span class="input-group-text">.</span>
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" placeholder="0" name="ip3" />
+                </div>
+                <div class="input-group-prepend">
+                  <span class="input-group-text">.</span>
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" placeholder="1" name="ip4" />
+                </div>
+                <div class="input-group-prepend">
+                  <span class="input-group-text">/</span>
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" placeholder="24" name="ipwide" />
+                </div>
+                <div class="col">
+                  <button class="btn btn-outline-primary" type="submit">Search</button>
+                </div>
+                &nbsp;&nbsp;
+                <div class="input-group-prepend">
+                  <span class="input-group-text"> Twój adress IP: {{my_ip_address}}</span>
+                </div>
               </div>
-              <div class="form-group w-25">
-                <input class="form-control input-sm" type="text" name="ip2">
-              </div>
-              <div class="form-group w-25">
-                <input class="form-control input-sm" type="text" name="ip3">
-              </div>
-              <div class="form-group w-25">
-                <input class="form-control input-sm" type="text" name="ip4">
-              </div>
-              <div class="form-group w-25">
-                <input class="form-control input-sm" type="text" name="ipwide">
-              </div>
-          </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    </ul>
-  </div>
-</nav>
-<table id="data" class="table table-striped">
-    <thead>
-      <tr>
-        <th class="text-center">IP Address</th>
-        <th class="text-center">MAC Address</th>
-        <th class="text-center">VENDOR</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for scan in scaned %}
-        <tr>
-          <td class="text-center">{{ scan.ip }}</td>
-          <td class="text-center">{{ scan.mac }}</td>
-          <td class="text-center">{{ scan.vendor }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-</table>
-</body>
-{% endblock %}
+            </div>
+          </form>
+
+        </div>
+        <table id="data" class="table table-striped">
+            <thead>
+              <tr>
+                <th class="text-center">IP Address</th>
+                <th class="text-center">MAC Address</th>
+                <th class="text-center">VENDOR</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for scan in scaned %}
+                <tr>
+                  <td class="text-center">{{ scan.ip }}</td>
+                  <td class="text-center">{{ scan.mac }}</td>
+                  <td class="text-center">{{ scan.vendor }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+        </body>
+    {% endblock %}
 
