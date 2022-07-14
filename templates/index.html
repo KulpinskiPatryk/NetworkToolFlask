@@ -2,7 +2,7 @@
     {% block body %}
         <!-- Pole wyszukiwania -->
         <div class="bg-light">
-          <form class="p-2 w-50" action="/" enctype="multipart/form-data" method="POST">
+          <form class="p-2 w-50" action="/scan/" enctype="multipart/form-data" method="POST">
             <div class="form-row">
               <div class="input-group">
                 <div class="input-group-prepend">
@@ -45,7 +45,6 @@
               </div>
             </div>
           </form>
-
         </div>
         <table id="data" class="table table-striped">
             <thead>
@@ -61,7 +60,9 @@
                   <td class="text-center">{{ scan.ip }}</td>
                   <td class="text-center">{{ scan.mac }}</td>
                   <td class="text-center">{{ scan.vendor }}</td>
+                  <td><a href="/actions/{{scan.ip}}" class="btn btn-primary"> >> </a></td>
                 </tr>
+
               {% endfor %}
             </tbody>
         </table>

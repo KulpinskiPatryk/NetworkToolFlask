@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+    {% block body %}
+        <div class="bg-light">
+            <div class="form-row">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <a href="/scan/" class="btn btn-primary"> >> </a>
+
+                <div class="input-group-prepend">
+                  <span class="input-group-text"> IP: {{chosen_ip}}</span>
+                </div>
+                <div class="input-group-prepend">
+                  <span class="input-group-text"> MAC: {{chosen_mac}}</span>
+                </div>
+                <div class="input-group-prepend">
+                  <span class="input-group-text"> PRODUCENT: {{chosen_vendor}}</span>
+                </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+<div class="row m-2">
+  <div class="card m-2 p-2" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title text-center">Card title</h5>
+      <p class="card-text">{{vendor}}</p>
+      <div class="text-center">
+        <form action="/actions/check_vendor/" method="POST">
+          <button name="check_vendor_button" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card m-2 p-2" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title text-center">Card title</h5>
+      <p class="card-text">{{ping}}</p>
+      <div class="text-center">
+        <form action="/actions/ping/" method="POST">
+          <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card m-2 p-2" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title text-center">Card title</h5>
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      <div class="text-center">
+        <a href="#" class="btn btn-primary center">Go somewhere</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card m-2 p-2" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title text-center">Card title</h5>
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      <div class="text-center">
+        <a href="#" class="btn btn-primary center">Go somewhere</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+        {% if chosen_vendor %}
+        <a href="actions/{{chosen_mac}}/vendor" class="btn btn-primary"> >> </a>
+        {% endif %}
+
+    simple backflips
+    {% endblock %}

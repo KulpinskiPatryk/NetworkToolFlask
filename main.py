@@ -6,9 +6,14 @@ import scapy.all as scapy
 import tkinter as tk
 import tkinter.ttk as ttk
 import socket
+import requests
+import argparse
+from pythonping import ping
+
+url = "https://api.macvendors.com/"
 
 
-#czytanie listy producentów
+# czytanie listy producentów
 def read_vendor_list():
     vendor_list = []
     with open("mac-vendor.txt", encoding='cp850') as my_file:
@@ -34,7 +39,7 @@ def search_vendor(mac, vendor_list):
     return vendor
 
 
-#skanowanie
+# skanowanie
 def scan(ip, vendor_list):
     arp_req_frame = scapy.ARP(pdst=ip)
 
@@ -58,6 +63,11 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    return render('index.html', title='Network Tool', my_ip_address=my_ip_address)
+
+
+@app.route('/scan/', methods=['GET', 'POST'])
+def scan_interface():
     vendor_list = read_vendor_list()
     if request.method == 'POST':
         ip1 = request.form['ip1']
@@ -67,10 +77,55 @@ def index():
         ipwide = request.form['ipwide']
         data = str(ip1 + '.' + ip2 + '.' + ip3 + '.' + ip4 + '/' + ipwide)
         searched_ip = data
-        scanned_output = scan(searched_ip, vendor_list)
+        scan_interface.scanned_output = scan(searched_ip, vendor_list)
         print(data)
-        return render('index.html', title='Network Tool', scaned=scanned_output, my_ip_address=my_ip_address)
-    return render('index.html', title='Network Tool', my_ip_address=my_ip_address)
+        return render('index.html', title='Network Tool', scaned=scan_interface.scanned_output,
+                      my_ip_address=my_ip_address)
+    return render('index.html', title='Network Tool', scaned=scan_interface.scanned_output, my_ip_address=my_ip_address)
+
+
+@app.route('/actions/<chosen_ip>', methods=['GET', 'POST'])
+def actions(chosen_ip):
+    actions.chosen_ip = chosen_ip
+    print(chosen_ip)
+    for s in scan_interface.scanned_output:
+        if s['ip'] == chosen_ip:
+            actions.chosen_mac = s['mac']
+            chosen_vendor = s['vendor']
+            try:
+                ping_list = s['ping']
+            except:
+                ping_list = "NULL"
+                pass
+
+    return render('actions.html', title='Network Tool', chosen_ip=chosen_ip, chosen_mac=actions.chosen_mac
+                  , chosen_vendor=chosen_vendor, ping=ping_list)
+
+
+@app.route('/actions/check_vendor/', methods=['GET', 'POST'])
+def check_vendor_online():
+    if request.method == 'POST':
+        r = requests.get(url + actions.chosen_mac)
+        print(r.content.decode())
+        print(actions.chosen_mac)
+        vale = r.content.decode()
+        for s in scan_interface.scanned_output:
+            if s['mac'] == actions.chosen_mac:
+                if "errors" in vale:
+                    s['vendor'] = "Nie znaleziono w bazie danych"
+                else:
+                    s['vendor'] = r.content.decode()
+                chosen_ip = s['ip']
+        return redirect(url_for('actions', chosen_ip=chosen_ip))
+
+
+@app.route('/actions/ping/', methods=['GET', 'POST'])
+def ping_chosen_ip():
+    ping_list = ping(actions.chosen_ip, verbose=True)
+    for s in scan_interface.scanned_output:
+        if s['ip'] == actions.chosen_ip:
+            s['ping'] = ping_list
+    return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
 
 
 if __name__ == '__main__':
