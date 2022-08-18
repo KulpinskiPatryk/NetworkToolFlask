@@ -1,16 +1,14 @@
-from flask import Flask, request
+import sys
 from flask import render_template as render
 from flask import *
-from flask_table import Table, Col
 import scapy.all as scapy
-import tkinter as tk
-import tkinter.ttk as ttk
 import socket
 import requests
-import argparse
 from pythonping import ping
 
-url = "https://api.macvendors.com/"
+api_url = "https://api.macvendors.com/"
+
+list_of_ports = [21, 22, 80, 8080, 443]
 
 
 # czytanie listy producentów
@@ -29,9 +27,7 @@ def search_vendor(mac, vendor_list):
     vendor = ""
     for v in value:
         s_mac = s_mac + v
-    # print(s_mac)
     s_mac = s_mac[0] + s_mac[1] + s_mac[2] + s_mac[3] + s_mac[4] + s_mac[5]
-    # print(s_mac)
     for v in vendor_list:
         if v[0].casefold() == s_mac.casefold():
             vendor = v[1].strip()
@@ -39,7 +35,7 @@ def search_vendor(mac, vendor_list):
     return vendor
 
 
-# skanowanie
+# Skanowanie
 def scan(ip, vendor_list):
     arp_req_frame = scapy.ARP(pdst=ip)
 
@@ -55,6 +51,58 @@ def scan(ip, vendor_list):
         result.append(client_dict)
 
     return result
+
+
+# Ping Adress
+def ping_req(ip):
+    ping_data = ping(ip, verbose=True)
+    ping_text = str(ping_data)
+    d = 'ms'
+    ping_list = [e + d for e in ping_text.split(d) if e]
+    ping_list = [e.strip('\n\r') for e in ping_list]
+    ping_list = [e.strip('\r') for e in ping_list]
+    ping_list = [e.strip('\n') for e in ping_list]
+    return ping_list
+
+
+# Port Scanner
+def port_scanner(ip):
+    open_ports = []
+    closed_ports = []
+    try:
+        for port in list_of_ports:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(5)
+            result = s.connect_ex((ip, port))
+            if result == 0:
+                open_ports.append(port)
+            else:
+                closed_ports.append(port)
+            s.close()
+    except socket.error as error:
+        print(str(error))
+        sys.exit()
+        open_ports = []
+        closed_ports = []
+
+    return open_ports, closed_ports
+
+
+# Grabber ranek
+def frame_grabber(ip, port):
+    s = socket.socket()
+    s.connect((ip, int(port)))
+    message = s.recv(1024)
+    return message
+
+
+# Ip Spoofing
+def ip_spoofing(ip_source, ip_destination):
+    packet = scapy.IP(src=ip_source, dst=ip_destination) / scapy.ICMP()
+    resp = scapy.send(packet)
+    if resp:
+        resp.show()
+    return resp
 
 
 # Flask
@@ -93,25 +141,33 @@ def actions(chosen_ip):
             actions.chosen_mac = s['mac']
             chosen_vendor = s['vendor']
             try:
-                ping_list = s['ping']
-            except:
-                ping_list = "NULL"
+                try:
+                    ping_list = s['ping']
+                except KeyError:
+                    ping_list = "?"
+                try:
+                    open_ports = s['open_ports']
+                    closed_ports = s['closed_ports']
+                except KeyError:
+                    open_ports = "?"
+                    closed_ports = "?"
+            except KeyError:
                 pass
 
     return render('actions.html', title='Network Tool', chosen_ip=chosen_ip, chosen_mac=actions.chosen_mac
-                  , chosen_vendor=chosen_vendor, ping=ping_list)
+                  , chosen_vendor=chosen_vendor, ping=ping_list, o_ports=open_ports, c_ports=closed_ports)
 
 
 @app.route('/actions/check_vendor/', methods=['GET', 'POST'])
 def check_vendor_online():
     if request.method == 'POST':
-        r = requests.get(url + actions.chosen_mac)
+        r = requests.get(api_url + actions.chosen_mac)
         print(r.content.decode())
         print(actions.chosen_mac)
-        vale = r.content.decode()
+        value = r.content.decode()
         for s in scan_interface.scanned_output:
             if s['mac'] == actions.chosen_mac:
-                if "errors" in vale:
+                if "errors" in value:
                     s['vendor'] = "Nie znaleziono w bazie danych"
                 else:
                     s['vendor'] = r.content.decode()
@@ -121,11 +177,33 @@ def check_vendor_online():
 
 @app.route('/actions/ping/', methods=['GET', 'POST'])
 def ping_chosen_ip():
-    ping_list = ping(actions.chosen_ip, verbose=True)
+    ping_list = ping_req(actions.chosen_ip)
     for s in scan_interface.scanned_output:
         if s['ip'] == actions.chosen_ip:
             s['ping'] = ping_list
     return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
+
+
+@app.route('/actions/scan_ports/', methods=['GET', 'POST'])
+def scan_ports():
+    open_ports, closed_ports = port_scanner(actions.chosen_ip)
+    for s in scan_interface.scanned_output:
+        if s['ip'] == actions.chosen_ip:
+            s['open_ports'] = open_ports
+            s['closed_ports'] = closed_ports
+    return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
+
+
+@app.route('/actions/ip_spoofing/', methods=['GET', 'POST'])
+def view_ip_spoofing():
+    try:
+        ip_spoofing("192.168.50.44", "192.168.50.1")
+    except:
+        pass
+    return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
+
+
+# Dodanie routow do frame_grabbera
 
 
 if __name__ == '__main__':

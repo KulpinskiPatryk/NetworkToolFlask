@@ -4,7 +4,7 @@
             <div class="form-row">
               <div class="input-group">
                 <div class="input-group-prepend">
-                  <a href="/scan/" class="btn btn-primary"> >> </a>
+
 
                 <div class="input-group-prepend">
                   <span class="input-group-text"> IP: {{chosen_ip}}</span>
@@ -23,7 +23,7 @@
 <div class="row m-2">
   <div class="card m-2 p-2" style="width: 18rem;">
     <div class="card-body">
-      <h5 class="card-title text-center">Card title</h5>
+      <h5 class="card-title text-center">Check Vendor</h5>
       <p class="card-text">{{vendor}}</p>
       <div class="text-center">
         <form action="/actions/check_vendor/" method="POST">
@@ -35,10 +35,29 @@
 
   <div class="card m-2 p-2" style="width: 18rem;">
     <div class="card-body">
-      <h5 class="card-title text-center">Card title</h5>
-      <p class="card-text">{{ping}}</p>
+      <h5 class="card-title text-center">PING</h5>
+      {% if ping != "?" %}
+      {% for p in ping %}
+      <p class="card-text"> {{p}} </p>
+      {% endfor %}
+      {% endif %}
       <div class="text-center">
         <form action="/actions/ping/" method="POST">
+          <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card m-2 p-2" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title text-center">Ports</h5>
+      {% if o_ports != "?" %}
+      <p class="card-text">Otwarte porty: {{o_ports}}</p>
+      <p class="card-text">Zamknite porty: {{c_ports}}</p>
+      <div class="text-center">
+      {% endif %}
+        <form action="/actions/scan_ports/" method="POST">
           <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
         </form>
       </div>
@@ -54,21 +73,20 @@
       </div>
     </div>
   </div>
+</div>
 
+<div class="row m-2">
   <div class="card m-2 p-2" style="width: 18rem;">
     <div class="card-body">
-      <h5 class="card-title text-center">Card title</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      <h5 class="card-title text-center">IP Spoofing</h5>
+      <p class="card-text">{{vendor}}</p>
       <div class="text-center">
-        <a href="#" class="btn btn-primary center">Go somewhere</a>
+        <form action="/actions/ip_spoofing/" method="POST">
+          <button name="check_vendor_button" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+        </form>
       </div>
     </div>
   </div>
-</div>
 
-        {% if chosen_vendor %}
-        <a href="actions/{{chosen_mac}}/vendor" class="btn btn-primary"> >> </a>
-        {% endif %}
-
-    simple backflips
+<a href="/scan/" class="btn btn-primary"> >> </a>
     {% endblock %}
