@@ -1,18 +1,16 @@
 {% extends 'base.html' %}
     {% block body %}
         <div class="bg-light">
-            <div class="form-row">
+            <div class="form-row p-2">
               <div class="input-group">
                 <div class="input-group-prepend">
-
-
-                <div class="input-group-prepend">
+                <div class="p-1 input-group-prepend">
                   <span class="input-group-text"> IP: {{chosen_ip}}</span>
                 </div>
-                <div class="input-group-prepend">
+                <div class="p-1 input-group-prepend">
                   <span class="input-group-text"> MAC: {{chosen_mac}}</span>
                 </div>
-                <div class="input-group-prepend">
+                <div class="p-1 input-group-prepend">
                   <span class="input-group-text"> PRODUCENT: {{chosen_vendor}}</span>
                 </div>
                 </div>
@@ -37,9 +35,14 @@
     <div class="card-body">
       <h5 class="card-title text-center">PING</h5>
       {% if ping != "?" %}
+      {% if ping != "Request timed out" %}
       {% for p in ping %}
       <p class="card-text"> {{p}} </p>
       {% endfor %}
+      {% endif %}
+      {% if ping == "Request timed out" %}
+      <p class="card-text"> {{ping}}</p>
+      {% endif %}
       {% endif %}
       <div class="text-center">
         <form action="/actions/ping/" method="POST">
@@ -78,5 +81,5 @@
     </div>
   </div>
 
-<a href="/scan/" class="btn btn-primary"> >> </a>
+<a href="/scan/" class="btn btn-primary"> << back </a>
     {% endblock %}

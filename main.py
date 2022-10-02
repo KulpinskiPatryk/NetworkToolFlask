@@ -57,12 +57,15 @@ def scan(ip, vendor_list):
 def ping_req(ip):
     ping_data = ping(ip, verbose=True)
     ping_text = str(ping_data)
-    d = 'ms'
-    ping_list = [e + d for e in ping_text.split(d) if e]
-    ping_list = [e.strip('\n\r') for e in ping_list]
-    ping_list = [e.strip('\r') for e in ping_list]
-    ping_list = [e.strip('\n') for e in ping_list]
-    return ping_list
+    if "Request timed out" in ping_text:
+        return "Request timed out"
+    else:
+        d = 'ms'
+        ping_list = [e + d for e in ping_text.split(d) if e]
+        ping_list = [e.strip('\n\r') for e in ping_list]
+        ping_list = [e.strip('\r') for e in ping_list]
+        ping_list = [e.strip('\n') for e in ping_list]
+        return ping_list
 
 
 # Port Scanner
