@@ -57,12 +57,15 @@ def scan(ip, vendor_list):
 def ping_req(ip):
     ping_data = ping(ip, verbose=True)
     ping_text = str(ping_data)
-    d = 'ms'
-    ping_list = [e + d for e in ping_text.split(d) if e]
-    ping_list = [e.strip('\n\r') for e in ping_list]
-    ping_list = [e.strip('\r') for e in ping_list]
-    ping_list = [e.strip('\n') for e in ping_list]
-    return ping_list
+    if "Request timed out" in ping_text:
+        return "Request timed out"
+    else:
+        d = 'ms'
+        ping_list = [e + d for e in ping_text.split(d) if e]
+        ping_list = [e.strip('\n\r') for e in ping_list]
+        ping_list = [e.strip('\r') for e in ping_list]
+        ping_list = [e.strip('\n') for e in ping_list]
+        return ping_list
 
 
 # Port Scanner
@@ -160,19 +163,18 @@ def actions(chosen_ip):
 
 @app.route('/actions/check_vendor/', methods=['GET', 'POST'])
 def check_vendor_online():
-    if request.method == 'POST':
-        r = requests.get(api_url + actions.chosen_mac)
-        print(r.content.decode())
-        print(actions.chosen_mac)
-        value = r.content.decode()
-        for s in scan_interface.scanned_output:
-            if s['mac'] == actions.chosen_mac:
-                if "errors" in value:
-                    s['vendor'] = "Nie znaleziono w bazie danych"
-                else:
-                    s['vendor'] = r.content.decode()
-                chosen_ip = s['ip']
-        return redirect(url_for('actions', chosen_ip=chosen_ip))
+    r = requests.get(api_url + actions.chosen_mac)
+    print(r.content.decode())
+    print(actions.chosen_mac)
+    value = r.content.decode()
+    for s in scan_interface.scanned_output:
+        if s['mac'] == actions.chosen_mac:
+            if "errors" in value:
+                s['vendor'] = "Nie znaleziono w bazie danych"
+            else:
+                s['vendor'] = r.content.decode()
+            chosen_ip = s['ip']
+    return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
 
 
 @app.route('/actions/ping/', methods=['GET', 'POST'])

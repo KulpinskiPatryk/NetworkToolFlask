@@ -1,18 +1,16 @@
 {% extends 'base.html' %}
     {% block body %}
         <div class="bg-light">
-            <div class="form-row">
+            <div class="form-row p-2">
               <div class="input-group">
                 <div class="input-group-prepend">
-
-
-                <div class="input-group-prepend">
+                <div class="p-1 input-group-prepend">
                   <span class="input-group-text"> IP: {{chosen_ip}}</span>
                 </div>
-                <div class="input-group-prepend">
+                <div class="p-1 input-group-prepend">
                   <span class="input-group-text"> MAC: {{chosen_mac}}</span>
                 </div>
-                <div class="input-group-prepend">
+                <div class="p-1 input-group-prepend">
                   <span class="input-group-text"> PRODUCENT: {{chosen_vendor}}</span>
                 </div>
                 </div>
@@ -27,7 +25,7 @@
       <p class="card-text">{{vendor}}</p>
       <div class="text-center">
         <form action="/actions/check_vendor/" method="POST">
-          <button name="check_vendor_button" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+          <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
         </form>
       </div>
     </div>
@@ -37,9 +35,14 @@
     <div class="card-body">
       <h5 class="card-title text-center">PING</h5>
       {% if ping != "?" %}
+      {% if ping != "Request timed out" %}
       {% for p in ping %}
       <p class="card-text"> {{p}} </p>
       {% endfor %}
+      {% endif %}
+      {% if ping == "Request timed out" %}
+      <p class="card-text"> {{ping}}</p>
+      {% endif %}
       {% endif %}
       <div class="text-center">
         <form action="/actions/ping/" method="POST">
@@ -64,16 +67,6 @@
     </div>
   </div>
 
-  <div class="card m-2 p-2" style="width: 18rem;">
-    <div class="card-body">
-      <h5 class="card-title text-center">Card title</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      <div class="text-center">
-        <a href="#" class="btn btn-primary center">Go somewhere</a>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="row m-2">
   <div class="card m-2 p-2" style="width: 18rem;">
@@ -82,11 +75,11 @@
       <p class="card-text">{{vendor}}</p>
       <div class="text-center">
         <form action="/actions/ip_spoofing/" method="POST">
-          <button name="check_vendor_button" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+          <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
         </form>
       </div>
     </div>
   </div>
 
-<a href="/scan/" class="btn btn-primary"> >> </a>
+<a href="/scan/" class="btn btn-primary"> << back </a>
     {% endblock %}
