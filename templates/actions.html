@@ -68,17 +68,37 @@
   </div>
 
 
-<div class="row m-2">
   <div class="card m-2 p-2" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title text-center">IP Spoofing</h5>
-      <p class="card-text">{{vendor}}</p>
-      <div class="text-center">
-        <form action="/actions/ip_spoofing/" method="POST">
+        {% if spoof != "?" %}
+          <p class="card-text">{{spoof}}</p>
+          <div class="text-center">
+        {% endif %}
+          <div class="text-center">
+          <form action="/actions/ip_spoofing/" method="POST">
           <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
         </form>
       </div>
     </div>
+  </div>
+  </div>
+
+
+  <div class="card m-2 p-2" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title text-center">Frame Grabber</h5>
+      {% if frame != "?" %}
+          <p class="card-text">{{frame}}</p>
+          <div class="text-center">
+      {% endif %}
+      <div class="text-center">
+        <form action="/actions/frame_grab/" method="POST">
+          <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+        </form>
+      </div>
+    </div>
+  </div>
   </div>
 
 <a href="/scan/" class="btn btn-primary"> << back </a>

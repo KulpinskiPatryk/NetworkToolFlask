@@ -94,7 +94,7 @@ def port_scanner(ip):
 # Grabber ranek
 def frame_grabber(ip, port):
     s = socket.socket()
-    s.connect((ip, int(port)))
+    s.connect((ip, int(22)))
     message = s.recv(1024)
     return message
 
@@ -154,11 +154,20 @@ def actions(chosen_ip):
                 except KeyError:
                     open_ports = "?"
                     closed_ports = "?"
+                try:
+                    spoof_list = s['spoof']
+                except KeyError:
+                    spoof_list = "?"
+                try:
+                    frame_list = s['frame']
+                except KeyError:
+                    frame_list = "?"
             except KeyError:
                 pass
 
     return render('actions.html', title='Network Tool', chosen_ip=chosen_ip, chosen_mac=actions.chosen_mac
-                  , chosen_vendor=chosen_vendor, ping=ping_list, o_ports=open_ports, c_ports=closed_ports)
+                  , chosen_vendor=chosen_vendor, ping=ping_list, o_ports=open_ports, c_ports=closed_ports,
+                  spoof=spoof_list , frame=frame_list )
 
 
 @app.route('/actions/check_vendor/', methods=['GET', 'POST'])
@@ -199,13 +208,29 @@ def scan_ports():
 @app.route('/actions/ip_spoofing/', methods=['GET', 'POST'])
 def view_ip_spoofing():
     try:
-        ip_spoofing("192.168.50.44", "192.168.50.1")
-    except:
+        spoof = ip_spoofing("192.168.50.44", "192.168.50.1")
+        for s in scan_interface.scanned_output:
+            if s['ip'] == actions.chosen_ip:
+                s['spoof'] = spoof
+    except KeyError:
         pass
     return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
 
 
 # Dodanie routow do frame_grabbera
+@app.route('/actions/frame_grab/', methods=['GET', 'POST'])
+def view_frame_grab():
+    if request.method == 'POST':
+        try:
+            port = 22
+            gotten_message = frame_grabber(actions.chosen_ip, port)
+            for s in scan_interface.scanned_output:
+                if s['ip'] == actions.chosen_ip:
+                    print('On port ' + str(port) + ' : ' + str(gotten_message))
+                    s['frame'] = 'On port ' + str(port) + ' : ' + str(gotten_message)
+        except KeyError:
+            pass
+        return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
 
 
 if __name__ == '__main__':
