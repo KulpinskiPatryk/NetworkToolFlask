@@ -18,88 +18,93 @@
             </div>
         </div>
 
-<div class="row m-2">
-  <div class="card m-2 p-2" style="width: 18rem;">
-    <div class="card-body">
-      <h5 class="card-title text-center">Check Vendor</h5>
-      <p class="card-text">{{vendor}}</p>
-      <div class="text-center">
-        <form action="/actions/check_vendor/" method="POST">
-          <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
-        </form>
+    <div class="pt-2">
+      <div class="px-5">
+
+        <div class="card text-center p-3 mb-3">
+          <div class="card-body">
+            <h5 class="card-title text-center">Check Vendor</h5>
+            <p class="card-text"> {{chosen_vendor}} </p>
+            <div class="text-center">
+              <form action="/actions/check_vendor/" method="POST">
+                <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="card text-center p-3 mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Ping</h5>
+            {% if ping != "?" %}
+              {% if ping != "Request timed out" %}
+                {% for p in ping %}
+                  <p class="card-text"> {{p}} </p>
+                {% endfor %}
+              {% endif %}
+              {% if ping == "Request timed out" %}
+                <p class="card-text"> {{ping}}</p>
+              {% endif %}
+            {% endif %}
+            <div class="text-center">
+              <form action="/actions/ping/" method="POST">
+                <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="card text-center p-3 mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Ports</h5>
+            {% if o_ports != "?" %}
+            <p class="card-text">Otwarte porty: {{o_ports}}</p>
+            <p class="card-text">Zamknite porty: {{c_ports}}</p>
+            <div class="text-center">
+            {% endif %}
+              <form action="/actions/scan_ports/" method="POST">
+                <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-5">
+
+        <div class="card text-center p-3 mb-3">
+          <div class="card-body">
+            <h5 class="card-title">IP Spoofing</h5>
+              {% if spoof != "?" %}
+                <p class="card-text">{{spoof}}</p>
+              {% endif %}
+              <div class="text-center">
+                <form action="/actions/ip_spoofing/" method="POST">
+                  <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+                </form>
+              </div>
+          </div>
+        </div>
+
+
+        <div class="card text-center p-3 mb-3">
+          <div class="card-body">
+            <h5 class="card-title text-center">Frame Grabber</h5>
+            {% if frame != "?" %}
+                <p class="card-text">{{frame}}</p>
+            {% endif %}
+            <div class="text-center">
+              <form action="/actions/frame_grab/" method="POST">
+                <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="card m-2 p-2" style="width: 18rem;">
-    <div class="card-body">
-      <h5 class="card-title text-center">PING</h5>
-      {% if ping != "?" %}
-      {% if ping != "Request timed out" %}
-      {% for p in ping %}
-      <p class="card-text"> {{p}} </p>
-      {% endfor %}
-      {% endif %}
-      {% if ping == "Request timed out" %}
-      <p class="card-text"> {{ping}}</p>
-      {% endif %}
-      {% endif %}
-      <div class="text-center">
-        <form action="/actions/ping/" method="POST">
-          <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <div class="card m-2 p-2" style="width: 18rem;">
-    <div class="card-body">
-      <h5 class="card-title text-center">Ports</h5>
-      {% if o_ports != "?" %}
-      <p class="card-text">Otwarte porty: {{o_ports}}</p>
-      <p class="card-text">Zamknite porty: {{c_ports}}</p>
-      <div class="text-center">
-      {% endif %}
-        <form action="/actions/scan_ports/" method="POST">
-          <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
-        </form>
-      </div>
-    </div>
-  </div>
 
 
-  <div class="card m-2 p-2" style="width: 18rem;">
-    <div class="card-body">
-      <h5 class="card-title text-center">IP Spoofing</h5>
-        {% if spoof != "?" %}
-          <p class="card-text">{{spoof}}</p>
-          <div class="text-center">
-        {% endif %}
-          <div class="text-center">
-          <form action="/actions/ip_spoofing/" method="POST">
-          <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
-        </form>
-      </div>
-    </div>
+  <div class="row px-5">
+    <a href="/scan/" class="btn btn-primary"> << back </a>
   </div>
-  </div>
-
-
-  <div class="card m-2 p-2" style="width: 18rem;">
-    <div class="card-body">
-      <h5 class="card-title text-center">Frame Grabber</h5>
-      {% if frame != "?" %}
-          <p class="card-text">{{frame}}</p>
-          <div class="text-center">
-      {% endif %}
-      <div class="text-center">
-        <form action="/actions/frame_grab/" method="POST">
-          <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
-        </form>
-      </div>
-    </div>
-  </div>
-  </div>
-
-<a href="/scan/" class="btn btn-primary"> << back </a>
-    {% endblock %}
+  {% endblock %}

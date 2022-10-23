@@ -112,6 +112,7 @@ def ip_spoofing(ip_source, ip_destination):
 app = Flask(__name__)
 
 
+# Index + skanowanie sieci
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render('index.html', title='Network Tool', my_ip_address=my_ip_address)
@@ -135,6 +136,7 @@ def scan_interface():
     return render('index.html', title='Network Tool', scaned=scan_interface.scanned_output, my_ip_address=my_ip_address)
 
 
+# Akcje na wybrany IP
 @app.route('/actions/<chosen_ip>', methods=['GET', 'POST'])
 def actions(chosen_ip):
     actions.chosen_ip = chosen_ip
@@ -167,7 +169,7 @@ def actions(chosen_ip):
 
     return render('actions.html', title='Network Tool', chosen_ip=chosen_ip, chosen_mac=actions.chosen_mac
                   , chosen_vendor=chosen_vendor, ping=ping_list, o_ports=open_ports, c_ports=closed_ports,
-                  spoof=spoof_list , frame=frame_list )
+                  spoof=spoof_list, frame=frame_list)
 
 
 @app.route('/actions/check_vendor/', methods=['GET', 'POST'])
@@ -228,9 +230,15 @@ def view_frame_grab():
                 if s['ip'] == actions.chosen_ip:
                     print('On port ' + str(port) + ' : ' + str(gotten_message))
                     s['frame'] = 'On port ' + str(port) + ' : ' + str(gotten_message)
-        except KeyError:
+        except ConnectionRefusedError:
             pass
         return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
+
+
+# Konfiguracja Portów
+@app.route('/port_config/', methods=['GET', 'POST'])
+def view_port_config():
+    return render('port_config.html', title='Network Tool',list_of_ports=list_of_ports, my_ip_address=my_ip_address)
 
 
 if __name__ == '__main__':
