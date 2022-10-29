@@ -21,6 +21,7 @@ def read_vendor_list():
     return vendor_list
 
 
+# Szukanie w liście producenta
 def search_vendor(mac, vendor_list):
     value = mac.split(":")
     s_mac = ""
@@ -134,6 +135,7 @@ def index():
     return render('index.html', title='Network Tool', my_ip_address=my_ip_address)
 
 
+# lista po skanowaniu
 @app.route('/scan/', methods=['GET', 'POST'])
 def scan_interface():
     vendor_list = read_vendor_list()
@@ -188,6 +190,7 @@ def actions(chosen_ip):
                   spoof=spoof_list, frame=frame_list)
 
 
+# Sprawdzenie ip online
 @app.route('/actions/check_vendor/', methods=['GET', 'POST'])
 def check_vendor_online():
     r = requests.get(api_url + actions.chosen_mac)
@@ -239,7 +242,7 @@ def view_ip_spoofing():
     return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
 
 
-# Dodanie routow do frame_grabbera
+# Dodanie frame_grabbera
 @app.route('/actions/frame_grab/', methods=['GET', 'POST'])
 def view_frame_grab():
     if request.method == 'POST':

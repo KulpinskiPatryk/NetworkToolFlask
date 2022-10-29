@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="da9d59d5-2c21-42f8-baaf-d495aaa49d1b" name="Changes" comment="Update visual upgrade">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="da9d59d5-2c21-42f8-baaf-d495aaa49d1b" name="Changes" comment="Update on frame grabber and change idea for spoofing">
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/actions.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/actions.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +81,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666539094911</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Update on frame grabber and change idea for spoofing">
+      <created>1667038167081</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1667038167081</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -101,6 +106,7 @@
     <MESSAGE value="Added actions" />
     <MESSAGE value="Update" />
     <MESSAGE value="Update visual upgrade" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update visual upgrade" />
+    <MESSAGE value="Update on frame grabber and change idea for spoofing" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update on frame grabber and change idea for spoofing" />
   </component>
 </project>
