@@ -74,12 +74,24 @@
 
         <div class="card text-center p-3 mb-3">
           <div class="card-body">
-            <h5 class="card-title">IP Spoofing</h5>
-              {% if spoof != "?" %}
-                <p class="card-text">{{spoof}}</p>
+            <h5 class="card-title">Sniff Packets on This IP</h5>
+              {% if sniff != "?" %}
+                <p class="card-text">{{sniff}}</p>
+                {% for summ in sniff_summary %}
+                <p class="card-text">{{summ}}</p>
+                {% endfor %}
               {% endif %}
               <div class="text-center">
-                <form action="/actions/ip_spoofing/" method="POST">
+                <form action="/actions/ip_sniffing/" method="POST">
+                  <select name="value_of_times">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                  </select>
                   <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
                 </form>
               </div>
@@ -100,7 +112,12 @@
                   <option value="{{o}}">{{o}}</option>
                   {% endfor %}
                 </select>
+                {% if o_ports != '?' %}
                 <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+                {% endif %}
+                {% if o_ports == '?' %}
+                <button name="" type="submit" class="btn btn-outline-dangerous center disabled" disabled>Go somewhere</button>
+                {% endif %}
               </form>
             </div>
           </div>

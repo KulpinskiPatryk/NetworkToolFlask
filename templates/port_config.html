@@ -3,8 +3,28 @@
         <div class="p-3">
             <p class="text"> {{list_of_ports}}</p>
             <form class="p-2 w-50" action="/add_port/" enctype="multipart/form-data" method="POST">
-            <input type="text" class="form-control" placeholder="Podaj numer portu do dodania">
+            <input name="new_port" type="text" class="form-control" placeholder="Podaj numer portu do dodania">
             <button class="btn btn-outline-primary" type="submit">Dodaj</button>
             </form>
+            <form class="p-2 w-50" action="/del_port/" enctype="multipart/form-data" method="POST">
+            <select name="port_to_del">
+                {% for l in list_of_ports %}
+                <option value="{{l}}"> {{l}}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-outline-primary" type="submit">usun</button>
+            </form>
         </div>
+
+        {% if scan_interface%}
+        <div class="row px-5">
+            <a href="/scan/" class="btn btn-primary"> << back </a>
+        </div>
+        {% endif %}
+        {% if not scan_interface %}
+        <div class="row px-5">
+            <a href="/" class="btn btn-primary"> << back </a>
+        </div>
+        {% endif %}
+
     {% endblock %}

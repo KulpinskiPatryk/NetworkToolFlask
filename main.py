@@ -120,9 +120,12 @@ def ip_spoofing(ip_source, ip_destination):
 
 
 # snifffing packets
-def ip_sniff(ip_source):
-    pack_sniff = scapy.sniff(count=5, filter="host " + str(ip_source))
-    return pack_sniff
+def ip_sniff(ip_source, times):
+    pack_sniff = scapy.sniff(prn=lambda x:x.summary(), count=int(times), filter="host " + str(ip_source))
+    packets_more_information = []
+    for p in pack_sniff:
+        packets_more_information.append(p.mysummary())
+    return pack_sniff, packets_more_information
 
 
 # Flask
@@ -175,9 +178,11 @@ def actions(chosen_ip):
                     open_ports = "?"
                     closed_ports = "?"
                 try:
-                    spoof_list = s['spoof']
+                    sniff_list = s['sniff']
+                    sniff_summary = s['sniff_summary']
                 except KeyError:
-                    spoof_list = "?"
+                    sniff_list = "?"
+                    sniff_summary = "?"
                 try:
                     frame_list = s['frame']
                 except KeyError:
@@ -187,15 +192,15 @@ def actions(chosen_ip):
 
     return render('actions.html', title='Network Tool', chosen_ip=chosen_ip, chosen_mac=actions.chosen_mac
                   , chosen_vendor=chosen_vendor, ping=ping_list, o_ports=open_ports, c_ports=closed_ports,
-                  spoof=spoof_list, frame=frame_list)
+                  sniff=sniff_list, sniff_summary=sniff_summary, frame=frame_list)
 
 
 # Sprawdzenie ip online
 @app.route('/actions/check_vendor/', methods=['GET', 'POST'])
 def check_vendor_online():
     r = requests.get(api_url + actions.chosen_mac)
-    print(r.content.decode())
-    print(actions.chosen_mac)
+    # print(r.content.decode())
+    # print(actions.chosen_mac)
     value = r.content.decode()
     for s in scan_interface.scanned_output:
         if s['mac'] == actions.chosen_mac:
@@ -203,7 +208,6 @@ def check_vendor_online():
                 s['vendor'] = "Nie znaleziono w bazie danych"
             else:
                 s['vendor'] = r.content.decode()
-            chosen_ip = s['ip']
     return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
 
 
@@ -226,19 +230,19 @@ def scan_ports():
     return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
 
 
-@app.route('/actions/ip_spoofing/', methods=['GET', 'POST'])
-def view_ip_spoofing():
+@app.route('/actions/ip_sniffing/', methods=['GET', 'POST'])
+def view_ip_sniffing():
     # przeyłanie paczek z wybranego adresu do adresu obecnie wybranego
     if request.method == 'POST':
-        source = request.form['source_ip']
-    try:
-        # spoof = ip_spoofing(source, actions.chosen_ip)
-        sniff = ip_sniff(actions.chosen_ip)
-        for s in scan_interface.scanned_output:
-            if s['ip'] == actions.chosen_ip:
-                s['spoof'] = sniff
-    except KeyError:
-        pass
+        times = request.form['value_of_times']
+        try:
+            sniff, sniff_more_information = ip_sniff(actions.chosen_ip, times)
+            for s in scan_interface.scanned_output:
+                if s['ip'] == actions.chosen_ip:
+                    s['sniff'] = sniff
+                    s['sniff_summary'] = sniff_more_information
+        except KeyError:
+            pass
     return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
 
 
@@ -251,7 +255,7 @@ def view_frame_grab():
             gotten_message = frame_grabber(actions.chosen_ip, chosen_port)
             for s in scan_interface.scanned_output:
                 if s['ip'] == actions.chosen_ip:
-                    print('On port ' + str(chosen_port) + ' : ' + str(gotten_message))
+                    # print('On port ' + str(chosen_port) + ' : ' + str(gotten_message))
                     s['frame'] = 'On port ' + str(chosen_port) + ' : ' + str(gotten_message)
         except ConnectionRefusedError:
             pass
@@ -261,7 +265,32 @@ def view_frame_grab():
 # Konfiguracja Portów
 @app.route('/port_config/', methods=['GET', 'POST'])
 def view_port_config():
-    return render('port_config.html', title='Network Tool',list_of_ports=list_of_ports, my_ip_address=my_ip_address)
+    check = False
+    try:
+        if scan_interface.scanned_output is not None:
+            check = True
+    except AttributeError:
+        pass
+    return render('port_config.html', title='Network Tool', list_of_ports=list_of_ports, my_ip_address=my_ip_address,
+                  scan_interface=check)
+
+
+# Dodawanie portow
+@app.route('/add_port/', methods=['GET', 'POST'])
+def add_port():
+    if request.method == 'POST':
+        new_port = request.form['new_port']
+        list_of_ports.append(int(new_port))
+    return redirect(url_for('view_port_config'))
+
+
+# Usuwanie portow
+@app.route('/del_port/', methods=['GET', 'POST'])
+def del_port():
+    if request.method == 'POST':
+        port_to_del = request.form['port_to_del']
+        list_of_ports.remove(int(port_to_del))
+    return redirect(url_for('view_port_config'))
 
 
 if __name__ == '__main__':

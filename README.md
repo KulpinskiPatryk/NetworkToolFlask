@@ -1,2 +1,2 @@
 # NetworkToolFlask
- SImple network testing tool using flask
+ Simple network testing tool using flask
