@@ -128,6 +128,16 @@ def ip_sniff(ip_source, times):
     return pack_sniff, packets_more_information
 
 
+def check_if_scanned():
+    check = False
+    try:
+        if scan_interface.scanned_output is not None:
+            check = True
+    except AttributeError:
+        pass
+    return check
+
+
 # Flask
 app = Flask(__name__)
 
@@ -199,8 +209,6 @@ def actions(chosen_ip):
 @app.route('/actions/check_vendor/', methods=['GET', 'POST'])
 def check_vendor_online():
     r = requests.get(api_url + actions.chosen_mac)
-    # print(r.content.decode())
-    # print(actions.chosen_mac)
     value = r.content.decode()
     for s in scan_interface.scanned_output:
         if s['mac'] == actions.chosen_mac:
@@ -265,12 +273,7 @@ def view_frame_grab():
 # Konfiguracja Portów
 @app.route('/port_config/', methods=['GET', 'POST'])
 def view_port_config():
-    check = False
-    try:
-        if scan_interface.scanned_output is not None:
-            check = True
-    except AttributeError:
-        pass
+    check = check_if_scanned()
     return render('port_config.html', title='Network Tool', list_of_ports=list_of_ports, my_ip_address=my_ip_address,
                   scan_interface=check)
 
@@ -291,6 +294,25 @@ def del_port():
         port_to_del = request.form['port_to_del']
         list_of_ports.remove(int(port_to_del))
     return redirect(url_for('view_port_config'))
+
+
+# Sprawdzeie Adresu Mac online
+@app.route('/check_online_sep/', methods=['GET', 'POST'])
+def check_online_sep():
+    check = check_if_scanned()
+    value = None
+    return render('check_online_sep.html', title='Network Tool', scan_interface=check, value=value)
+
+
+# Sprawdzeie Adresu Mac online
+@app.route('/check_online_sep_act/', methods=['GET', 'POST'])
+def check_online_sep_act():
+    check = check_if_scanned()
+    if request.method == 'POST':
+        mac_adrr = request.form['mac_adrr']
+        r = requests.get(api_url + str(mac_adrr))
+        value = r.content.decode()
+    return render('check_online_sep.html', title='Network Tool', scan_interface=check, value=value)
 
 
 if __name__ == '__main__':
