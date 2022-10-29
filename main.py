@@ -304,7 +304,7 @@ def check_online_sep():
     return render('check_online_sep.html', title='Network Tool', scan_interface=check, value=value)
 
 
-# Sprawdzeie Adresu Mac online
+# Sprawdzeie Adresu Mac online akcja
 @app.route('/check_online_sep_act/', methods=['GET', 'POST'])
 def check_online_sep_act():
     check = check_if_scanned()
@@ -313,6 +313,24 @@ def check_online_sep_act():
         r = requests.get(api_url + str(mac_adrr))
         value = r.content.decode()
     return render('check_online_sep.html', title='Network Tool', scan_interface=check, value=value)
+
+
+# Osobny ping punktow
+@app.route('/ping_sep/', methods=['GET', 'POST'])
+def ping_sep():
+    check = check_if_scanned()
+    value = None
+    return render('ping_sep.html', title='Network Tool', scan_interface=check, value=value)
+
+
+# Osobny ping punktow akcja
+@app.route('/ping_sep_act/', methods=['GET', 'POST'])
+def ping_sep_act():
+    check = check_if_scanned()
+    if request.method == 'POST':
+        ip_adrr = request.form['ip_adrr']
+        value = ping_req(ip_adrr)
+    return render('ping_sep.html', title='Network Tool', scan_interface=check, value=value)
 
 
 if __name__ == '__main__':
