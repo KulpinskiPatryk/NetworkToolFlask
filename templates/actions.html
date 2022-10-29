@@ -95,6 +95,11 @@
             {% endif %}
             <div class="text-center">
               <form action="/actions/frame_grab/" method="POST">
+                <select name="chosen_port">
+                  {% for o in o_ports %}
+                  <option value="{{o}}">{{o}}</option>
+                  {% endfor %}
+                </select>
                 <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
               </form>
             </div>

@@ -1,9 +1,10 @@
-import sys
-from flask import render_template as render
-from flask import *
-import scapy.all as scapy
 import socket
+import sys
+import select
 import requests
+import scapy.all as scapy
+from flask import *
+from flask import render_template as render
 from pythonping import ping
 
 api_url = "https://api.macvendors.com/"
@@ -91,11 +92,15 @@ def port_scanner(ip):
     return open_ports, closed_ports
 
 
-# Grabber ranek
+# Grabber ramek
 def frame_grabber(ip, port):
     s = socket.socket()
-    s.connect((ip, int(22)))
-    message = s.recv(1024)
+    s.settimeout(5)
+    try:
+        s.connect((ip, int(port)))
+        message = s.recv(1024)
+    except TimeoutError:
+        message = "Time out"
     return message
 
 
@@ -103,9 +108,20 @@ def frame_grabber(ip, port):
 def ip_spoofing(ip_source, ip_destination):
     packet = scapy.IP(src=ip_source, dst=ip_destination) / scapy.ICMP()
     resp = scapy.send(packet)
+    packet_list = []
     if resp:
+        for r in resp:
+            print(r.show())
+            packet_list.append(r.show(dump=True))
         resp.show()
+    print(packet_list)
     return resp
+
+
+# snifffing packets
+def ip_sniff(ip_source):
+    pack_sniff = scapy.sniff(count=5, filter="host " + str(ip_source))
+    return pack_sniff
 
 
 # Flask
@@ -209,11 +225,15 @@ def scan_ports():
 
 @app.route('/actions/ip_spoofing/', methods=['GET', 'POST'])
 def view_ip_spoofing():
+    # przeyłanie paczek z wybranego adresu do adresu obecnie wybranego
+    if request.method == 'POST':
+        source = request.form['source_ip']
     try:
-        spoof = ip_spoofing("192.168.50.44", "192.168.50.1")
+        # spoof = ip_spoofing(source, actions.chosen_ip)
+        sniff = ip_sniff(actions.chosen_ip)
         for s in scan_interface.scanned_output:
             if s['ip'] == actions.chosen_ip:
-                s['spoof'] = spoof
+                s['spoof'] = sniff
     except KeyError:
         pass
     return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
@@ -223,13 +243,13 @@ def view_ip_spoofing():
 @app.route('/actions/frame_grab/', methods=['GET', 'POST'])
 def view_frame_grab():
     if request.method == 'POST':
+        chosen_port = request.form['chosen_port']
         try:
-            port = 22
-            gotten_message = frame_grabber(actions.chosen_ip, port)
+            gotten_message = frame_grabber(actions.chosen_ip, chosen_port)
             for s in scan_interface.scanned_output:
                 if s['ip'] == actions.chosen_ip:
-                    print('On port ' + str(port) + ' : ' + str(gotten_message))
-                    s['frame'] = 'On port ' + str(port) + ' : ' + str(gotten_message)
+                    print('On port ' + str(chosen_port) + ' : ' + str(gotten_message))
+                    s['frame'] = 'On port ' + str(chosen_port) + ' : ' + str(gotten_message)
         except ConnectionRefusedError:
             pass
         return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
