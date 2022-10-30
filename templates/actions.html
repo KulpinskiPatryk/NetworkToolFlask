@@ -107,16 +107,23 @@
             {% endif %}
             <div class="text-center">
               <form action="/actions/frame_grab/" method="POST">
-                <select name="chosen_port">
-                  {% for o in o_ports %}
-                  <option value="{{o}}">{{o}}</option>
-                  {% endfor %}
-                </select>
                 {% if o_ports != '?' %}
-                <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+                  {% if o_ports != '[?]' %}
+                    <select name="chosen_port">
+                      {% for o in o_ports %}
+                        <option value="{{o}}">{{o}}</option>
+                      {% endfor %}
+                    </select>
+                  {% endif %}
                 {% endif %}
-                {% if o_ports == '?' %}
-                <button name="" type="submit" class="btn btn-outline-dangerous center disabled" disabled>Go somewhere</button>
+                {% if o_ports != '?' %}
+                  {% if o_ports != '[?]' %}
+                      <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+                    {% else %}
+                      <button name="" type="submit" class="btn btn-outline-dangerous center disabled" disabled>Go somewhere</button>
+                  {% endif %}
+                  {% else %}
+                      <button name="" type="submit" class="btn btn-outline-dangerous center disabled" disabled>Go somewhere</button>
                 {% endif %}
               </form>
             </div>

@@ -1,6 +1,6 @@
 import socket
 import sys
-import select
+
 import requests
 import scapy.all as scapy
 from flask import *
@@ -25,7 +25,6 @@ def read_vendor_list():
 def search_vendor(mac, vendor_list):
     value = mac.split(":")
     s_mac = ""
-    i = 0
     vendor = ""
     for v in value:
         s_mac = s_mac + v
@@ -90,6 +89,9 @@ def port_scanner(ip):
         open_ports = []
         closed_ports = []
 
+    if len(open_ports) < 1:
+        open_ports = "[?]"
+
     return open_ports, closed_ports
 
 
@@ -106,22 +108,23 @@ def frame_grabber(ip, port):
 
 
 # Ip Spoofing
-def ip_spoofing(ip_source, ip_destination):
-    packet = scapy.IP(src=ip_source, dst=ip_destination) / scapy.ICMP()
-    resp = scapy.send(packet)
-    packet_list = []
-    if resp:
-        for r in resp:
-            print(r.show())
-            packet_list.append(r.show(dump=True))
-        resp.show()
-    print(packet_list)
-    return resp
+
+#def ip_spoofing(ip_source, ip_destination):
+#    packet = scapy.IP(src=ip_source, dst=ip_destination) / scapy.ICMP()
+#    resp = scapy.send(packet)
+#    packet_list = []
+#    if resp:
+#        for r in resp:
+#            print(r.show())
+#            packet_list.append(r.show(dump=True))
+#        resp.show()
+#    print(packet_list)
+#    return resp
 
 
 # snifffing packets
 def ip_sniff(ip_source, times):
-    pack_sniff = scapy.sniff(prn=lambda x:x.summary(), count=int(times), filter="host " + str(ip_source))
+    pack_sniff = scapy.sniff(prn=lambda x: x.summary(), count=int(times), filter="host " + str(ip_source))
     packets_more_information = []
     for p in pack_sniff:
         packets_more_information.append(p.mysummary())
@@ -131,7 +134,7 @@ def ip_sniff(ip_source, times):
 def check_if_scanned():
     check = False
     try:
-        if scan_interface.scanned_output is not None:
+        if view_scan_interface.scanned_output is not None:
             check = True
     except AttributeError:
         pass
@@ -150,7 +153,7 @@ def index():
 
 # lista po skanowaniu
 @app.route('/scan/', methods=['GET', 'POST'])
-def scan_interface():
+def view_scan_interface():
     vendor_list = read_vendor_list()
     if request.method == 'POST':
         ip1 = request.form['ip1']
@@ -160,21 +163,22 @@ def scan_interface():
         ipwide = request.form['ipwide']
         data = str(ip1 + '.' + ip2 + '.' + ip3 + '.' + ip4 + '/' + ipwide)
         searched_ip = data
-        scan_interface.scanned_output = scan(searched_ip, vendor_list)
-        print(data)
-        return render('index.html', title='Network Tool', scaned=scan_interface.scanned_output,
+        view_scan_interface.scanned_output = scan(searched_ip, vendor_list)
+        # print(data)
+        return render('index.html', title='Network Tool', scaned=view_scan_interface.scanned_output,
                       my_ip_address=my_ip_address)
-    return render('index.html', title='Network Tool', scaned=scan_interface.scanned_output, my_ip_address=my_ip_address)
+    return render('index.html', title='Network Tool', scaned=view_scan_interface.scanned_output,
+                  my_ip_address=my_ip_address)
 
 
 # Akcje na wybrany IP
 @app.route('/actions/<chosen_ip>', methods=['GET', 'POST'])
-def actions(chosen_ip):
-    actions.chosen_ip = chosen_ip
+def view_actions(chosen_ip):
+    view_actions.chosen_ip = chosen_ip
     print(chosen_ip)
-    for s in scan_interface.scanned_output:
+    for s in view_scan_interface.scanned_output:
         if s['ip'] == chosen_ip:
-            actions.chosen_mac = s['mac']
+            view_actions.chosen_mac = s['mac']
             chosen_vendor = s['vendor']
             try:
                 try:
@@ -183,6 +187,7 @@ def actions(chosen_ip):
                     ping_list = "?"
                 try:
                     open_ports = s['open_ports']
+                    print(open_ports)
                     closed_ports = s['closed_ports']
                 except KeyError:
                     open_ports = "?"
@@ -200,58 +205,57 @@ def actions(chosen_ip):
             except KeyError:
                 pass
 
-    return render('actions.html', title='Network Tool', chosen_ip=chosen_ip, chosen_mac=actions.chosen_mac
-                  , chosen_vendor=chosen_vendor, ping=ping_list, o_ports=open_ports, c_ports=closed_ports,
+    return render('actions.html', title='Network Tool', chosen_ip=chosen_ip, chosen_mac=view_actions.chosen_mac,
+                  chosen_vendor=chosen_vendor, ping=ping_list, o_ports=open_ports, c_ports=closed_ports,
                   sniff=sniff_list, sniff_summary=sniff_summary, frame=frame_list)
 
 
 # Sprawdzenie ip online
 @app.route('/actions/check_vendor/', methods=['GET', 'POST'])
-def check_vendor_online():
-    r = requests.get(api_url + actions.chosen_mac)
+def view_check_vendor_online():
+    r = requests.get(api_url + view_actions.chosen_mac)
     value = r.content.decode()
-    for s in scan_interface.scanned_output:
-        if s['mac'] == actions.chosen_mac:
+    for s in view_scan_interface.scanned_output:
+        if s['mac'] == view_actions.chosen_mac:
             if "errors" in value:
                 s['vendor'] = "Nie znaleziono w bazie danych"
             else:
                 s['vendor'] = r.content.decode()
-    return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
+    return redirect(url_for('view_actions', chosen_ip=view_actions.chosen_ip))
 
 
 @app.route('/actions/ping/', methods=['GET', 'POST'])
-def ping_chosen_ip():
-    ping_list = ping_req(actions.chosen_ip)
-    for s in scan_interface.scanned_output:
-        if s['ip'] == actions.chosen_ip:
+def view_ping_chosen_ip():
+    ping_list = ping_req(view_actions.chosen_ip)
+    for s in view_scan_interface.scanned_output:
+        if s['ip'] == view_actions.chosen_ip:
             s['ping'] = ping_list
-    return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
+    return redirect(url_for('view_actions', chosen_ip=view_actions.chosen_ip))
 
 
 @app.route('/actions/scan_ports/', methods=['GET', 'POST'])
-def scan_ports():
-    open_ports, closed_ports = port_scanner(actions.chosen_ip)
-    for s in scan_interface.scanned_output:
-        if s['ip'] == actions.chosen_ip:
+def view_scan_ports():
+    open_ports, closed_ports = port_scanner(view_actions.chosen_ip)
+    for s in view_scan_interface.scanned_output:
+        if s['ip'] == view_actions.chosen_ip:
             s['open_ports'] = open_ports
             s['closed_ports'] = closed_ports
-    return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
+    return redirect(url_for('view_actions', chosen_ip=view_actions.chosen_ip))
 
 
 @app.route('/actions/ip_sniffing/', methods=['GET', 'POST'])
 def view_ip_sniffing():
-    # przeyłanie paczek z wybranego adresu do adresu obecnie wybranego
     if request.method == 'POST':
         times = request.form['value_of_times']
         try:
-            sniff, sniff_more_information = ip_sniff(actions.chosen_ip, times)
-            for s in scan_interface.scanned_output:
-                if s['ip'] == actions.chosen_ip:
+            sniff, sniff_more_information = ip_sniff(view_actions.chosen_ip, times)
+            for s in view_scan_interface.scanned_output:
+                if s['ip'] == view_actions.chosen_ip:
                     s['sniff'] = sniff
                     s['sniff_summary'] = sniff_more_information
         except KeyError:
             pass
-    return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
+    return redirect(url_for('view_actions', chosen_ip=view_actions.chosen_ip))
 
 
 # Dodanie frame_grabbera
@@ -260,14 +264,14 @@ def view_frame_grab():
     if request.method == 'POST':
         chosen_port = request.form['chosen_port']
         try:
-            gotten_message = frame_grabber(actions.chosen_ip, chosen_port)
-            for s in scan_interface.scanned_output:
-                if s['ip'] == actions.chosen_ip:
+            gotten_message = frame_grabber(view_actions.chosen_ip, chosen_port)
+            for s in view_scan_interface.scanned_output:
+                if s['ip'] == view_actions.chosen_ip:
                     # print('On port ' + str(chosen_port) + ' : ' + str(gotten_message))
                     s['frame'] = 'On port ' + str(chosen_port) + ' : ' + str(gotten_message)
         except ConnectionRefusedError:
             pass
-        return redirect(url_for('actions', chosen_ip=actions.chosen_ip))
+        return redirect(url_for('view_actions', chosen_ip=view_actions.chosen_ip))
 
 
 # Konfiguracja Portów
@@ -298,7 +302,7 @@ def del_port():
 
 # Sprawdzeie Adresu Mac online
 @app.route('/check_online_sep/', methods=['GET', 'POST'])
-def check_online_sep():
+def view_check_online_sep():
     check = check_if_scanned()
     value = None
     return render('check_online_sep.html', title='Network Tool', scan_interface=check, value=value)
@@ -306,7 +310,7 @@ def check_online_sep():
 
 # Sprawdzeie Adresu Mac online akcja
 @app.route('/check_online_sep_act/', methods=['GET', 'POST'])
-def check_online_sep_act():
+def view_check_online_sep_act():
     check = check_if_scanned()
     if request.method == 'POST':
         mac_adrr = request.form['mac_adrr']
@@ -317,7 +321,7 @@ def check_online_sep_act():
 
 # Osobny ping punktow
 @app.route('/ping_sep/', methods=['GET', 'POST'])
-def ping_sep():
+def view_ping_sep():
     check = check_if_scanned()
     value = None
     return render('ping_sep.html', title='Network Tool', scan_interface=check, value=value)
@@ -325,12 +329,51 @@ def ping_sep():
 
 # Osobny ping punktow akcja
 @app.route('/ping_sep_act/', methods=['GET', 'POST'])
-def ping_sep_act():
+def view_ping_sep_act():
     check = check_if_scanned()
     if request.method == 'POST':
         ip_adrr = request.form['ip_adrr']
         value = ping_req(ip_adrr)
     return render('ping_sep.html', title='Network Tool', scan_interface=check, value=value)
+
+
+# Osobne skanowanie portow
+@app.route('/port_scan_sep/', methods=['GET', 'POST'])
+def view_port_scan_sep():
+    check = check_if_scanned()
+    value1 = None
+    value2 = None
+    return render('port_scan_sep.html', title='Network Tool', scan_interface=check, value1=value1, value2=value2)
+
+
+# Osobne skanowanie portow akcja
+@app.route('/port_scan_sep_act/', methods=['GET', 'POST'])
+def view_port_scan_sep_act():
+    check = check_if_scanned()
+    if request.method == 'POST':
+        ip_adrr = request.form['ip_adrr']
+        value1, value2 = port_scanner(ip_adrr)
+    return render('port_scan_sep.html', title='Network Tool', scan_interface=check, value1=value1, value2=value2)
+
+
+# Osobny ip sniff
+@app.route('/ip_sniff_sep/', methods=['GET', 'POST'])
+def view_ip_sniff_sep():
+    check = check_if_scanned()
+    value1 = None
+    value2 = None
+    return render('ip_sniff_sep.html', title='Network Tool', scan_interface=check, value1=value1, value2=value2)
+
+
+# Osobny ip sniff akcja
+@app.route('/ip_sniff_sep_act/', methods=['GET', 'POST'])
+def view_ip_sniff_sep_act():
+    check = check_if_scanned()
+    if request.method == 'POST':
+        ip_adrr = request.form['ip_adrr']
+        times = request.form['times']
+        value1, value2 = ip_sniff(ip_adrr, times)
+    return render('ip_sniff_sep.html', title='Network Tool', scan_interface=check, value1=value1, value2=value2)
 
 
 if __name__ == '__main__':

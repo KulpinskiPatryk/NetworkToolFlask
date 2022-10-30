@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+    {% block body %}
+        <div class="p-3">
+            <p class="text"> Ip Sniffer </p>
+            {% if value1 != None %}
+              <p class="card-text">{{value1}}</p>
+              {% for v in value2 %}
+              <p class="card-text">{{v}}</p>
+              {% endfor %}
+            {% endif %}
+            <form class="p-2 w-50" action="/ip_sniff_sep_act/" enctype="multipart/form-data" method="POST">
+                <select name="times">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                  </select>
+                <input name="ip_adrr" type="text" class="form-control" placeholder="Podaj Adres IP">
+                <button class="btn btn-outline-primary" type="submit">Dodaj</button>
+            </form>
+        </div>
+
+        {% if scan_interface %}
+        <div class="row px-5">
+            <a href="/scan/" class="btn btn-primary"> << back </a>
+        </div>
+        {% endif %}
+        {% if not scan_interface %}
+        <div class="row px-5">
+            <a href="/" class="btn btn-primary"> << back </a>
+        </div>
+        {% endif %}
+
+    {% endblock %}
