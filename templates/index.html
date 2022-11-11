@@ -1,72 +1,69 @@
 {% extends 'base.html' %}
     {% block body %}
-        <!-- Pole wyszukiwania -->
-        <div class="bg-light">
-          <form class="p-2 w-50" action="/scan/" enctype="multipart/form-data" method="POST">
-            <div class="form-row">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Adres:</span>
-                </div>
-                <div class="col-1">
-                  <input type="text" class="form-control" placeholder="192" value="192" name="ip1" />
-                </div>
-                <div class="input-group-prepend">
-                  <span class="input-group-text">.</span>
-                </div>
-                <div class="col-1">
-                  <input type="text" class="form-control" placeholder="168" value="168" name="ip2" />
-                </div>
-                <div class="input-group-prepend">
-                  <span class="input-group-text">.</span>
-                </div>
-                <div class="col-1">
-                  <input type="text" class="form-control" placeholder="0" value="50" name="ip3" />
-                </div>
-                <div class="input-group-prepend">
-                  <span class="input-group-text">.</span>
-                </div>
-                <div class="col-1">
-                  <input type="text" class="form-control" placeholder="1" value="1" name="ip4" />
-                </div>
-                <div class="input-group-prepend">
-                  <span class="input-group-text">/</span>
-                </div>
-                <div class="col-1">
-                  <input type="text" class="form-control" placeholder="24" value="24" name="ipwide" />
-                </div>
-                <div class="col">
-                  <button class="btn btn-outline-primary" type="submit">Search</button>
-                </div>
-                <div class="pt-2 pb-2">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"> Twój adress IP: {{my_ip_address}}</span>
-                  </div>
-                </div>
-              </div>
+      <form class="px-2 py-2 is-dark" action="/scan/" enctype="multipart/form-data" method="POST">
+            <div class="field has-addons">
+                <p class="control">
+                    <a class="button is-static">Adres: </a>
+                </p>
+                <p class="control">
+                    <input type="text" class="input" placeholder="192" value="192" name="ip1">
+                </p>
+                <p class="control">
+                    <a class="button is-static">.</a>
+                </p>
+                <p class="control">
+                    <input type="text" class="input" placeholder="168" value="168" name="ip2">
+                </p>
+                <p class="control">
+                    <a class="button is-static">.</a>
+                </p>
+                <p class="control">
+                    <input type="text" class="input" placeholder="50" value="50" name="ip3">
+                </p>
+                <p class="control">
+                    <a class="button is-static">.</a>
+                </p>
+                <p class="control">
+                    <input type="text" class="input" placeholder="1" value="1" name="ip4">
+                </p>
+                <p class="control">
+                    <a class="button is-static">/</a>
+                </p>
+                <p class="control">
+                    <input type="text" class="input" placeholder="24" value="24" name="ipwide">
+                </p>
+                <button class="button is-info" type="submit">
+                    Skanuj
+                </button>
             </div>
-          </form>
+        </form>
+        <div class="px-2">
+            <div class="button is-static">
+                Twoj adres IP to : {{my_ip_address}}
+            </div>
         </div>
-        <table id="data" class="table table-striped">
-            <thead>
-              <tr>
-                <th class="text-center">IP Address</th>
-                <th class="text-center">MAC Address</th>
-                <th class="text-center">VENDOR</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for scan in scaned %}
-                <tr>
-                  <td class="text-center">{{ scan.ip }}</td>
-                  <td class="text-center">{{ scan.mac }}</td>
-                  <td class="text-center">{{ scan.vendor }}</td>
-                  <td><a href="/actions/{{scan.ip}}" class="btn btn-primary"> >> </a></td>
-                </tr>
 
+        <div id="data" class="px-2 py-2 has-text-white">
+            <table class="table is-bordered is-striped is-fullwidth has-background-dark ">
+                <thead class="th is-selected">
+                    <th class="has-text-white has-text-centered">Adres IP</th>
+                    <th class="has-text-white has-text-centered">Adres MAC</th>
+                    <th class="has-text-white has-text-centered">Producent</th>
+                    <th></th>
+                </thead>
+              {% for scan in scaned %}
+                <tbody>
+
+                    <td class="has-text-white has-text-centered">{{ scan.ip }}</td>
+                    <td class="has-text-white has-text-centered">{{ scan.mac }}</td>
+                    <td class="has-text-white has-text-centered">{{ scan.vendor }}</td>
+                    <td style="width: 120px;" ><a style="width: 120px;" class="button is-success is-fullwidth" href="/actions/{{scan.ip}}"> Więcej opcji </a></td>
+
+                </tbody>
               {% endfor %}
-            </tbody>
-        </table>
+            </table>
+        </div>
+
         </body>
     {% endblock %}
 

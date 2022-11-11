@@ -1,18 +1,24 @@
-{% extends 'base.html' %}
-    {% block body %}
-        <div class="px-2 py-2">
-            <div class="button is-primary is-static">
-                IP: {{chosen_ip}}
+<!DOCTYPE html>
+<html lang="en" class="has-background-dark">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Title</title>
+    </head>
+    <body class="px-2 py-2">
+        <div class="px-2">
+            <div class="button is-static">
+                Twoj adres IP to :
             </div>
             <div class="button is-static">
-                MAC: {{chosen_mac}}
+                Twoj adres IP to :
             </div>
             <div class="button is-static">
-                PRODUCENT: {{chosen_vendor}}
+                Twoj adres IP to :
             </div>
         </div>
-
-   <div class="px-2 py-2">
+        <div class="px-2 py-2">
             <div class="tile is-ancestor is-dark">
               <div class="tile is-vertical is-8">
                 <div class="tile">
@@ -84,7 +90,7 @@
                             <option value="15">15</option>
                         </select>
                         <button class="button is-link is-rounded" type="submit"> Sprawdź </button>
-                    </form>
+                    </form>   
                   </article>
                 </div>
               </div>
@@ -107,10 +113,6 @@
                     </article>
                 </div>
             </div>
-   </div>
-
-
-  <div class="row px-5">
-    <a href="/scan/" class="btn btn-primary"> << back </a>
-  </div>
-  {% endblock %}
+        </div>
+    </body>
+</html>
