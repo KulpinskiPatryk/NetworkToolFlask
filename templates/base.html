@@ -10,13 +10,18 @@
           <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
               <div id="navbarBasicExample" class="navbar-menu is-active">
                   <div class="navbar-start">
-                      <a class="navbar-item" href="/">Home</a>
+                      {% if scan_interface %}
+                      <a class="navbar-item" href="/scan/">Skanowanie sieci lokalnej</a>
+                      {% endif %}
+                      {% if not scan_interface %}
+                      <a class="navbar-item" href="/">Skanowanie sieci lokalnej</a>
+                      {% endif %}
                       <hr class="navbar-divider">
                       <a class="navbar-item" href="/port_config/">Konfiguruj porty do skanowania</a>
-                      <a class="navbar-item" href="/check_online_sep/">Online Check</a>
-                      <a class="navbar-item" href="/ping_sep/">Pingu</a>
+                      <a class="navbar-item" href="/check_online_sep/">Sprawdzenie Producenta Online</a>
+                      <a class="navbar-item" href="/ping_sep/">Ping</a>
                       <a class="navbar-item" href="/port_scan_sep/">Skanowanie Portow</a>
-                      <a class="navbar-item" href="/ip_sniff_sep/">IP Sniff</a>
+                      <a class="navbar-item" href="/ip_sniff_sep/">IP Sniffer</a>
                   </div>
               </div>
           </nav>

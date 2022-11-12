@@ -1,25 +1,31 @@
 {% extends 'base.html' %}
     {% block body %}
-        <div class="p-3">
-            <p class="text"> Sprawdź Producenta Online</p>
-            {% if value %}
-            <p class="text">{{value}}</p>
-            {% endif %}
-            <form class="p-2 w-50" action="/check_online_sep_act/" enctype="multipart/form-data" method="POST">
-                <input name="mac_adrr" type="text" class="form-control" placeholder="Podaj Adres Mac">
-                <button class="btn btn-outline-primary" type="submit">Dodaj</button>
-            </form>
+        <div class="tile box">
+            <article class="px-2 py-2">
+                <p class="title"> Sprawdź Producenta Online</p>
+                    {% if value %}
+                <p class="subtitle">{{value}}</p>
+                    {% endif %}
+                <div class="content">
+                    <form class="form" action="/check_online_sep_act/" enctype="multipart/form-data" method="POST">
+                        <div class="field has-addons">
+                            <input name="mac_adrr" type="text" class="input is-link" placeholder="Podaj Adres Mac">
+                            <button class="button is-link" type="submit"> Sprawdź </button>
+                        </div>
+                    </form>
+                </div>
+            </article>
         </div>
 
         {% if scan_interface %}
-        <div class="row px-5">
-            <a href="/scan/" class="btn btn-primary"> << back </a>
+        <div class="is-fullwidth">
+            <a href="/scan/" class="button is-info is-fullwidth"> << Powrót </a>
         </div>
         {% endif %}
         {% if not scan_interface %}
-        <div class="row px-5">
-            <a href="/" class="btn btn-primary"> << back </a>
+        <div class="is-fullwidth">
+            <a href="/" class="button is-info is-fullwidth"> << Powrót </a>
         </div>
         {% endif %}
 
-    {% endblock %}
+{% endblock %}

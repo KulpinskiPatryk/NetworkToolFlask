@@ -1,37 +1,46 @@
 {% extends 'base.html' %}
     {% block body %}
-        <div class="p-3">
-            <p class="text"> Ip Sniffer </p>
-            {% if value1 != None %}
-              <p class="card-text">{{value1}}</p>
-              {% for v in value2 %}
-              <p class="card-text">{{v}}</p>
-              {% endfor %}
-            {% endif %}
-            <form class="p-2 w-50" action="/ip_sniff_sep_act/" enctype="multipart/form-data" method="POST">
-                <select name="times">
-                    <option value="1" selected>1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                  </select>
-                <input name="ip_adrr" type="text" class="form-control" placeholder="Podaj Adres IP">
-                <button class="btn btn-outline-primary" type="submit">Dodaj</button>
-            </form>
+        <div class="tile box">
+            <article class="px-2 py-2">
+                    <p class="title"> Ip Sniffer </p>
+                {% if value1 != None %}
+                    <p class="subtitle">{{value1}}</p>
+                  {% for v in value2 %}
+                    <p class="subtitle">{{v}}</p>
+                  {% endfor %}
+                {% endif %}
+                <div class="content">
+                    <form class="form" action="/ip_sniff_sep_act/" enctype="multipart/form-data" method="POST">
+                        <div class="field has-addons">
+                            <div class="select is-normal is-link is-rounded">
+                                <select name="times">
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <input name="ip_adrr" type="text" class="input is-link" placeholder="Podaj Adres IP">
+                            <button class="button is-link" type="submit"> Sprawdź </button>
+                        </div>
+                    </form>
+                </div>
+            </article>
         </div>
 
+
         {% if scan_interface %}
-        <div class="row px-5">
-            <a href="/scan/" class="btn btn-primary"> << back </a>
-        </div>
-        {% endif %}
-        {% if not scan_interface %}
-        <div class="row px-5">
-            <a href="/" class="btn btn-primary"> << back </a>
-        </div>
+                <div class="is-fullwidth">
+                    <a href="/scan/" class="button is-info is-fullwidth"> << Powrót </a>
+                </div>
+            {% endif %}
+            {% if not scan_interface %}
+                <div class="is-fullwidth">
+                    <a href="/" class="button is-info is-fullwidth"> << Powrót </a>
+                </div>
         {% endif %}
 
     {% endblock %}

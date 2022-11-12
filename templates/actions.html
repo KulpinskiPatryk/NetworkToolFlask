@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
     {% block body %}
         <div class="px-2 py-2">
-            <div class="button is-primary is-static">
+            <div class="button is-static">
                 IP: {{chosen_ip}}
             </div>
             <div class="button is-static">
@@ -27,26 +27,28 @@
                         <article class="tile is-child box">
                             <p class="title">Frame Grabber</p>
                             {% if frame != "?" %}
-                                <p class="subtitle">Bottom tile</p>
+                                <p class="subtitle">{{frame}}</p>
                             {% endif %}
                             <form class="form" action="/actions/frame_grab/" method="POST">
                             {% if o_ports != '?' %}
                               {% if o_ports != '[?]' %}
-                                <select name="chosen_port">
-                                  {% for o in o_ports %}
-                                    <option value="{{o}}">{{o}}</option>
-                                  {% endfor %}
-                                </select>
+                                <div class="select is-normal is-link is-rounded">
+                                    <select name="chosen_port">
+                                      {% for o in o_ports %}
+                                        <option value="{{o}}">{{o}}</option>
+                                      {% endfor %}
+                                    </select>
+                                </div>
                               {% endif %}
                             {% endif %}
                             {% if o_ports != '?' %}
                               {% if o_ports != '[?]' %}
-                                  <button name="" type="submit" class="btn btn-outline-info center">Go somewhere</button>
+                                  <button type="submit" class="button is-link is-rounded">Sprawdź</button>
                                 {% else %}
-                                  <button name="" type="submit" class="btn btn-outline-dangerous center disabled" disabled>Go somewhere</button>
+                                  <button type="submit" class="button is-link is-rounded" disabled>Sprawdź</button>
                               {% endif %}
                               {% else %}
-                                  <button name="" type="submit" class="btn btn-outline-dangerous center disabled" disabled>Go somewhere</button>
+                                  <button type="submit" class="button is-link is-rounded" disabled>Sprawdź</button>
                             {% endif %}
                             </form>
                         </article>
@@ -74,15 +76,17 @@
                         {% endfor %}
                     {% endif %}
                     <form class="form" action="/actions/ip_sniffing/" method="POST">
-                        <select name="value_of_times">
-                            <option value="1" selected>1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                        </select>
+                        <div class="select is-normal is-link is-rounded">
+                            <select name="value_of_times">
+                                <option value="1" selected>1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                            </select>
+                        </div>
                         <button class="button is-link is-rounded" type="submit"> Sprawdź </button>
                     </form>
                   </article>
@@ -110,7 +114,7 @@
    </div>
 
 
-  <div class="row px-5">
-    <a href="/scan/" class="btn btn-primary"> << back </a>
+  <div class="is-fullwidth">
+    <a href="/scan/" class="button is-info is-fullwidth"> << Powrót </a>
   </div>
   {% endblock %}

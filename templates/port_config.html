@@ -1,30 +1,43 @@
 {% extends 'base.html' %}
     {% block body %}
-        <div class="p-3">
-            <p class="text"> {{list_of_ports}}</p>
-            <form class="p-2 w-50" action="/add_port/" enctype="multipart/form-data" method="POST">
-            <input name="new_port" type="text" class="form-control" placeholder="Podaj numer portu do dodania">
-            <button class="btn btn-outline-primary" type="submit">Dodaj</button>
-            </form>
-            <form class="p-2 w-50" action="/del_port/" enctype="multipart/form-data" method="POST">
-            <select name="port_to_del">
-                {% for l in list_of_ports %}
-                <option value="{{l}}"> {{l}}</option>
-                {% endfor %}
-            </select>
-            <button class="btn btn-outline-primary" type="submit">usun</button>
-            </form>
+        <div class="tile box">
+            <article class="px-2 py-2">
+                <p class="title"> Dodaj lub usuń port do skanowania</p>
+                <p class="subtitle"> {{list_of_ports}}</p>
+                <div class="content">
+                    <form class="form" action="/add_port/" enctype="multipart/form-data" method="POST">
+                        <div class="field has-addons">
+                            <input name="new_port" type="text" class="input is-link" placeholder="Podaj numer portu do dodania">
+                            <button class="button is-success" type="submit">Dodaj</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="content">
+                <form class="form" action="/del_port/" enctype="multipart/form-data" method="POST">
+                        <div class="field has-addons">
+                            <div class="select is-normal is-link is-rounded">
+                                <select name="port_to_del">
+                                    {% for l in list_of_ports %}
+                                    <option value="{{l}}"> {{l}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button class="button is-danger" type="submit">Usuń</button>
+                        </div>
+                    </form>
+                </div>
+            </article>
         </div>
 
-        {% if scan_interface%}
-        <div class="row px-5">
-            <a href="/scan/" class="btn btn-primary"> << back </a>
-        </div>
+        {% if scan_interface %}
+            <div class="is-fullwidth">
+                <a href="/scan/" class="button is-info is-fullwidth"> << Powrót </a>
+            </div>
         {% endif %}
         {% if not scan_interface %}
-        <div class="row px-5">
-            <a href="/" class="btn btn-primary"> << back </a>
-        </div>
+            <div class="is-fullwidth">
+                <a href="/" class="button is-info is-fullwidth"> << Powrót </a>
+            </div>
         {% endif %}
 
     {% endblock %}

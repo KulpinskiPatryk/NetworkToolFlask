@@ -1,24 +1,30 @@
 {% extends 'base.html' %}
     {% block body %}
-        <div class="p-3">
-            <p class="text"> Port scanner </p>
-            <p class="card-text">Otwarte porty: {{value1}}</p>
-            <p class="card-text">Zamknite porty: {{value2}}</p>
-            <form class="p-2 w-50" action="/port_scan_sep_act/" enctype="multipart/form-data" method="POST">
-                <input name="ip_adrr" type="text" class="form-control" placeholder="Podaj Adres IP">
-                <button class="btn btn-outline-primary" type="submit">Dodaj</button>
-            </form>
+        <div class="tile box">
+            <article class="px-2 py-2">
+                <p class="title"> Port scanner </p>
+                <p class="subtitle">Otwarte porty: {{value1}}</p>
+                <p class="subtitle">Zamknite porty: {{value2}}</p>
+                <div class="content">
+                    <form class="form" action="/port_scan_sep_act/" enctype="multipart/form-data" method="POST">
+                        <div class="field has-addons">
+                            <input name="ip_adrr" type="text" class="input is-link" placeholder="Podaj Adres IP">
+                            <button class="button is-link" type="submit"> Sprawdź </button>
+                        </div>
+                    </form>
+                </div>
+            </article>
         </div>
 
         {% if scan_interface %}
-        <div class="row px-5">
-            <a href="/scan/" class="btn btn-primary"> << back </a>
-        </div>
+            <div class="is-fullwidth">
+                <a href="/scan/" class="button is-info is-fullwidth"> << Powrót </a>
+            </div>
         {% endif %}
         {% if not scan_interface %}
-        <div class="row px-5">
-            <a href="/" class="btn btn-primary"> << back </a>
-        </div>
+            <div class="is-fullwidth">
+                <a href="/" class="button is-info is-fullwidth"> << Powrót </a>
+            </div>
         {% endif %}
 
     {% endblock %}

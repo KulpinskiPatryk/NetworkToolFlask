@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="da9d59d5-2c21-42f8-baaf-d495aaa49d1b" name="Changes" comment="Update of more separate Actions">
-      <change afterPath="$PROJECT_DIR$/templates/nowemenu.html" afterDir="false" />
+    <list default="true" id="da9d59d5-2c21-42f8-baaf-d495aaa49d1b" name="Changes" comment="Update zmiana wyglądu">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/actions.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/actions.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/check_online_sep.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/check_online_sep.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/ip_sniff_sep.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ip_sniff_sep.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/nowemenu.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/ping_sep.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ping_sep.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/port_config.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/port_config.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/port_scan_sep.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/port_scan_sep.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +124,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667142754919</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Update zmiana wyglądu">
+      <created>1668184721909</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1668184721909</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -141,6 +152,7 @@
     <MESSAGE value="Update on frame grabber and change idea for spoofing" />
     <MESSAGE value="Update of sniff" />
     <MESSAGE value="Update of more separate Actions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update of more separate Actions" />
+    <MESSAGE value="Update zmiana wyglądu" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update zmiana wyglądu" />
   </component>
 </project>
