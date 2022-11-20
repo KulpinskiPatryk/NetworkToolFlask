@@ -187,7 +187,7 @@ def view_actions(chosen_ip):
                     ping_list = "?"
                 try:
                     open_ports = s['open_ports']
-                    print(open_ports)
+                    #print(open_ports)
                     closed_ports = s['closed_ports']
                 except KeyError:
                     open_ports = "?"

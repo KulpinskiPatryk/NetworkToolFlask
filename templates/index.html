@@ -43,20 +43,21 @@
             </div>
         </div>
 
-        <div id="data" class="px-2 py-2 has-text-white">
-            <table class="table is-bordered is-striped is-fullwidth has-background-dark ">
+
+        <div id="data" class="px-2 py-2">
+            <table class="table is-bordered is-striped is-fullwidth has-background-light ">
                 <thead class="th is-selected">
-                    <th class="has-text-white has-text-centered">Adres IP</th>
-                    <th class="has-text-white has-text-centered">Adres MAC</th>
-                    <th class="has-text-white has-text-centered">Producent</th>
+                    <th class="has-text-centered">Adres IP</th>
+                    <th class="has-text-centered">Adres MAC</th>
+                    <th class="has-text-centered">Producent</th>
                     <th></th>
                 </thead>
               {% for scan in scaned %}
                 <tbody>
 
-                    <td class="has-text-white has-text-centered">{{ scan.ip }}</td>
-                    <td class="has-text-white has-text-centered">{{ scan.mac }}</td>
-                    <td class="has-text-white has-text-centered">{{ scan.vendor }}</td>
+                    <td class="has-text-centered">{{ scan.ip }}</td>
+                    <td class="has-text-centered">{{ scan.mac }}</td>
+                    <td class="has-text-centered">{{ scan.vendor }}</td>
                     <td style="width: 120px;" ><a style="width: 120px;" class="button is-success is-fullwidth" href="/actions/{{scan.ip}}"> Więcej opcji </a></td>
 
                 </tbody>
