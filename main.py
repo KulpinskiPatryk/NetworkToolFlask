@@ -71,24 +71,30 @@ def ping_req(ip):
 
 # Port Scanner
 def port_scanner(ip):
+    #Utworzenie dwóch list otwarte i zamknięte porty.
     open_ports = []
     closed_ports = []
     try:
+        #Każdy z domyślnych portów zostaje sprawdzony jego stan.
         for port in list_of_ports:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.settimeout(5)
+            #Wykorzystując bibliotekę socket zostaje przetestowany port.
             result = s.connect_ex((ip, port))
+            #Jeżeli port jest otwarty zostaje dodany do listy otwartych inaczej do listy zamkniętych.
             if result == 0:
                 open_ports.append(port)
             else:
                 closed_ports.append(port)
             s.close()
+    #Podczas błędu połączenia listy portów zostają puste
     except socket.error as error:
         print(str(error))
         sys.exit()
         open_ports = []
         closed_ports = []
 
+    #Jeżeli ilość portów otwartych jest mniejsza niż jeden zostaje zastąpiona znakiem zapytania
     if len(open_ports) < 1:
         open_ports = "[?]"
 
