@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="da9d59d5-2c21-42f8-baaf-d495aaa49d1b" name="Changes" comment="Update zmiana wyglądu wszystko">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-    </list>
+    <list default="true" id="da9d59d5-2c21-42f8-baaf-d495aaa49d1b" name="Changes" comment="Dodano support offline" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -149,7 +145,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677258921522</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Dodano support offline">
+      <created>1677527081007</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1677527081007</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -172,6 +175,7 @@
     <MESSAGE value="Update of more separate Actions" />
     <MESSAGE value="Update zmiana wyglądu" />
     <MESSAGE value="Update zmiana wyglądu wszystko" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update zmiana wyglądu wszystko" />
+    <MESSAGE value="Dodano support offline" />
+    <option name="LAST_COMMIT_MESSAGE" value="Dodano support offline" />
   </component>
 </project>
