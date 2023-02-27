@@ -345,20 +345,32 @@ def view_ping_sep_act():
 
 # Osobne skanowanie portow
 @app.route('/port_scan_sep/', methods=['GET', 'POST'])
+#Utworzenie ścieżki do strony z osobnym skanowaniem portów
 def view_port_scan_sep():
+    #Sprawdzenie czy skanowanie sieci zostało wykoanne jeźeli tak przy przejściu na widok skanowanych urządzeń zostanie
+    #wyświetlone poprzednie skanowanie
     check = check_if_scanned()
+    #utworzenie 2 pustych list na potrzeby wyników operacji
     value1 = None
     value2 = None
+    #wyświetlenie szablonu strony
     return render('port_scan_sep.html', title='Network Tool', scan_interface=check, value1=value1, value2=value2)
 
 
 # Osobne skanowanie portow akcja
 @app.route('/port_scan_sep_act/', methods=['GET', 'POST'])
+#Utworzenie ścieżki do strony z wynikami osobnego skanowania portów
 def view_port_scan_sep_act():
+    #Sprawdzenie czy skanowanie sieci zostało wykoanne jeźeli tak przy przejściu na widok skanowanych urządzeń zostanie
+    #wyświetlone poprzednie skanowanie
     check = check_if_scanned()
+    #wykonanie akcji po zatwierdzeniu formularza przez użytkownika
     if request.method == 'POST':
+        #Pobranie z formularza wpisanego adresu
         ip_adrr = request.form['ip_adrr']
+        #przy wykorzystaniu funkcji skanowania portów zapis do osobnych list portów zamkniętych jak i otwartych
         value1, value2 = port_scanner(ip_adrr)
+    # wyświetlenie szablonu strony zawierając wyniki
     return render('port_scan_sep.html', title='Network Tool', scan_interface=check, value1=value1, value2=value2)
 
 
